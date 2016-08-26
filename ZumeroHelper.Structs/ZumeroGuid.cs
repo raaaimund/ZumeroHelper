@@ -2,16 +2,16 @@
 
 namespace ZumeroHelper.Structs
 {
-    public struct ZumeroGuid : IZumeroStruct<byte[]>
+    public struct ZumeroGuid : IZumeroStruct<byte[]>, IComparable<ZumeroGuid>
     {
         #region Properties
 
-        public Guid Guid
+        public Guid GuidValue
         {
-            get { return _guid; }
+            get { return _guidValue; }
             set
             {
-                _guid = value;
+                _guidValue = value;
                 _value = Encode(value);
             }
         }
@@ -20,7 +20,7 @@ namespace ZumeroHelper.Structs
 
         #region Fields
 
-        Guid _guid;
+        Guid _guidValue;
         byte[] _value;
 
         #endregion
@@ -30,13 +30,13 @@ namespace ZumeroHelper.Structs
         public ZumeroGuid(byte[] value)
         {
             _value = value;
-            _guid = Decode(value);
+            _guidValue = Decode(value);
         }
 
-        public ZumeroGuid(Guid guid)
+        public ZumeroGuid(Guid guidValue)
         {
-            _value = Encode(guid);
-            _guid = guid;
+            _value = Encode(guidValue);
+            _guidValue = guidValue;
         }
 
         #endregion
@@ -63,17 +63,17 @@ namespace ZumeroHelper.Structs
 
         public static bool operator ==(Guid x, ZumeroGuid y)
         {
-            return x == y._guid;
+            return x == y._guidValue;
         }
 
         public static bool operator !=(Guid x, ZumeroGuid y)
         {
-            return !(x == y._guid);
+            return !(x == y._guidValue);
         }
 
         public static bool operator ==(ZumeroGuid x, ZumeroGuid y)
         {
-            return x._guid == y._guid;
+            return x._guidValue == y._guidValue;
         }
 
         public static bool operator !=(ZumeroGuid x, ZumeroGuid y)
@@ -98,7 +98,7 @@ namespace ZumeroHelper.Structs
         /// <returns></returns>
         public static implicit operator Guid(ZumeroGuid zumeroGuid)
         {
-            return zumeroGuid._guid;
+            return zumeroGuid._guidValue;
         }
 
         /// <summary>
@@ -128,22 +128,22 @@ namespace ZumeroHelper.Structs
         public override bool Equals(object obj)
         {
             if (obj is ZumeroGuid)
-                return _guid.Equals(((ZumeroGuid)obj)._guid);
+                return _guidValue.Equals(((ZumeroGuid)obj)._guidValue);
             if (obj is Guid)
-                return _guid.Equals((Guid)obj);
+                return _guidValue.Equals((Guid)obj);
             if (obj is string)
-                return _guid.ToString().Equals(obj.ToString());
+                return _guidValue.ToString().Equals(obj.ToString());
             return false;
         }
 
         public override int GetHashCode()
         {
-            return _guid.GetHashCode();
+            return _guidValue.GetHashCode();
         }
 
         public override string ToString()
         {
-            return _guid.ToString();
+            return _guidValue.ToString();
         }
 
         #endregion
@@ -248,5 +248,14 @@ namespace ZumeroHelper.Structs
         }
 
         #endregion
+
+        #region IComparable
+
+        public int CompareTo(ZumeroGuid other)
+        {
+            return _guidValue.CompareTo(other._guidValue);
+        }
+
+        #endregion IComparable
     }
 }

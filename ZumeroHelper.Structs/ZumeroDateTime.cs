@@ -2,18 +2,18 @@
 
 namespace ZumeroHelper.Structs
 {
-    public struct ZumeroDateTime : IZumeroStruct<string>
+    public struct ZumeroDateTime : IZumeroStruct<string>, IComparable<ZumeroDateTime>
     {
         public const string Format = "yyyy-MM-dd HH:mm:ss.fff";
 
         #region Properties
 
-        public DateTime DateTime
+        public DateTime DateTimeValue
         {
-            get { return _dateTime; }
+            get { return _dateTimeValue; }
             set
             {
-                _dateTime = value;
+                _dateTimeValue = value;
                 _value = Encode(value);
             }
         }
@@ -22,7 +22,7 @@ namespace ZumeroHelper.Structs
 
         #region Fields
 
-        DateTime _dateTime;
+        DateTime _dateTimeValue;
         string _value;
 
         #endregion
@@ -32,13 +32,13 @@ namespace ZumeroHelper.Structs
         public ZumeroDateTime(string value)
         {
             _value = value;
-            _dateTime = Decode(value);
+            _dateTimeValue = Decode(value);
         }
 
-        public ZumeroDateTime(DateTime dateTime)
+        public ZumeroDateTime(DateTime dateTimeValue)
         {
-            _value = Encode(dateTime);
-            _dateTime = dateTime;
+            _value = Encode(dateTimeValue);
+            _dateTimeValue = dateTimeValue;
         }
 
         #endregion
@@ -65,27 +65,27 @@ namespace ZumeroHelper.Structs
 
         public static bool operator >(ZumeroDateTime x, DateTime y)
         {
-            return x._dateTime > y;
+            return x._dateTimeValue > y;
         }
 
         public static bool operator <(ZumeroDateTime x, DateTime y)
         {
-            return x._dateTime < y;
+            return x._dateTimeValue < y;
         }
 
         public static bool operator >(ZumeroDateTime x, ZumeroDateTime y)
         {
-            return x._dateTime > y._dateTime;
+            return x._dateTimeValue > y._dateTimeValue;
         }
 
         public static bool operator <(ZumeroDateTime x, ZumeroDateTime y)
         {
-            return x._dateTime < y._dateTime;
+            return x._dateTimeValue < y._dateTimeValue;
         }
 
         public static bool operator ==(ZumeroDateTime x, DateTime y)
         {
-            return x._dateTime == y;
+            return x._dateTimeValue == y;
         }
 
         public static bool operator !=(ZumeroDateTime x, DateTime y)
@@ -95,7 +95,7 @@ namespace ZumeroHelper.Structs
 
         public static bool operator ==(ZumeroDateTime x, ZumeroDateTime y)
         {
-            return x._dateTime == y._dateTime;
+            return x._dateTimeValue == y._dateTimeValue;
         }
 
         public static bool operator !=(ZumeroDateTime x, ZumeroDateTime y)
@@ -110,7 +110,7 @@ namespace ZumeroHelper.Structs
         /// <returns></returns>
         public static implicit operator DateTime(ZumeroDateTime zumeroDateTime)
         {
-            return zumeroDateTime._dateTime;
+            return zumeroDateTime._dateTimeValue;
         }
 
         /// <summary>
@@ -130,20 +130,20 @@ namespace ZumeroHelper.Structs
         public override bool Equals(object obj)
         {
             if (obj is ZumeroDateTime)
-                return _dateTime.Equals(((ZumeroDateTime)obj)._dateTime);
+                return _dateTimeValue.Equals(((ZumeroDateTime)obj)._dateTimeValue);
             if (obj is DateTime)
-                return _dateTime.Equals((DateTime)obj);
+                return _dateTimeValue.Equals((DateTime)obj);
             return false;
         }
 
         public override int GetHashCode()
         {
-            return _dateTime.GetHashCode();
+            return _dateTimeValue.GetHashCode();
         }
 
         public override string ToString()
         {
-            return _dateTime.ToString(Format);
+            return _dateTimeValue.ToString(Format);
         }
 
         #endregion
@@ -248,5 +248,14 @@ namespace ZumeroHelper.Structs
         }
 
         #endregion
+
+        #region IComparable
+
+        public int CompareTo(ZumeroDateTime other)
+        {
+            return _dateTimeValue.CompareTo(other._dateTimeValue);
+        }
+
+        #endregion IComparable
     }
 }

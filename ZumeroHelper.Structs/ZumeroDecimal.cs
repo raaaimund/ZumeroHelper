@@ -2,7 +2,7 @@
 
 namespace ZumeroHelper.Structs
 {
-    public struct ZumeroDecimal : IZumeroStruct<long>
+    public struct ZumeroDecimal : IZumeroStruct<long>, IComparable<ZumeroDecimal>
     {
         public static long Scale = (long)Math.Pow(10, 6);
 
@@ -10,10 +10,10 @@ namespace ZumeroHelper.Structs
 
         public decimal DecimalValue
         {
-            get { return _decimal; }
+            get { return _decimalValue; }
             set
             {
-                _decimal = value;
+                _decimalValue = value;
                 _value = Encode(value);
             }
         }
@@ -22,7 +22,7 @@ namespace ZumeroHelper.Structs
 
         #region Fields
 
-        decimal _decimal;
+        decimal _decimalValue;
         long _value;
 
         #endregion
@@ -32,13 +32,13 @@ namespace ZumeroHelper.Structs
         public ZumeroDecimal(long value)
         {
             _value = value;
-            _decimal = Decode(value);
+            _decimalValue = Decode(value);
         }
 
         public ZumeroDecimal(decimal decimalValue)
         {
             _value = Encode(decimalValue);
-            _decimal = decimalValue;
+            _decimalValue = decimalValue;
         }
 
         #endregion
@@ -65,7 +65,7 @@ namespace ZumeroHelper.Structs
 
         public static bool operator ==(ZumeroDecimal x, ZumeroDecimal y)
         {
-            return x._decimal == y._decimal;
+            return x._decimalValue == y._decimalValue;
         }
 
         public static bool operator !=(ZumeroDecimal x, ZumeroDecimal y)
@@ -90,7 +90,7 @@ namespace ZumeroHelper.Structs
         /// <returns></returns>
         public static implicit operator decimal(ZumeroDecimal zumeroDecimal)
         {
-            return zumeroDecimal._decimal;
+            return zumeroDecimal._decimalValue;
         }
 
         /// <summary>
@@ -120,20 +120,20 @@ namespace ZumeroHelper.Structs
         public override bool Equals(object obj)
         {
             if (obj is ZumeroDecimal)
-                return _decimal.Equals(((ZumeroDecimal)obj)._decimal);
+                return _decimalValue.Equals(((ZumeroDecimal)obj)._decimalValue);
             if (obj is decimal)
-                return _decimal.Equals((decimal)obj);
+                return _decimalValue.Equals((decimal)obj);
             return false;
         }
 
         public override int GetHashCode()
         {
-            return _decimal.GetHashCode();
+            return _decimalValue.GetHashCode();
         }
 
         public override string ToString()
         {
-            return _decimal.ToString();
+            return _decimalValue.ToString();
         }
 
         #endregion
@@ -238,5 +238,14 @@ namespace ZumeroHelper.Structs
         }
 
         #endregion
+
+        #region IComparable
+
+        public int CompareTo(ZumeroDecimal other)
+        {
+            return _decimalValue.CompareTo(other._decimalValue);
+        }
+
+        #endregion IComparable
     }
 }
